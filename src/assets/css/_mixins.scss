@@ -1,0 +1,22 @@
+/*
+ * 文本单行超出隐藏
+ * $w 宽度
+ */
+ @mixin ellipsis($w: auto) {
+  width: $w;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+/*
+ * 多行文本超出隐藏
+ * $line 几行 默认2
+ */
+@mixin ellipsisLn($line: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+}
