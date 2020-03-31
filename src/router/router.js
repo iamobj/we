@@ -16,12 +16,28 @@ let routes = [
     meta: {
       title: '首页'
     }
+  },
+  {
+    path: '/timeMeachine',
+    name: 'timeMeachine',
+    component: () => import('@/views/TimeMachine'),
+    meta: {
+      title: '时光机'
+    }
   }
 ]
 
 if (process.env.NODE_ENV !== 'production') {
   // 不是生产环境 需要的路由页面 比如demo页面，生产环境不需要
   const devRoutes = [
+    {
+      path: '/svgList',
+      name: 'svgList',
+      component: () => import('@/views/demo/SvgList.vue'),
+      meta: {
+        title: 'svg图标展厅'
+      }
+    }
   ]
   routes = [...routes, ...devRoutes]
 }
