@@ -67,19 +67,19 @@ const vueConfig = {
 
   css: {
     loaderOptions: {
+      scss: {
+        // 向全局scss样式传入共享的全局变量
+        prependData: `
+          @import "@/assets/css/_mixins.scss";
+        `
+      },
+      less: {
+        modifyVars: {
+          // 定制vant组件主题
+          hack: `true; @import "${resolve('src')}/assets/css/_vant-theme.less";`
+        }
+      },
       postcss: {
-        scss: {
-          // 向全局scss样式传入共享的全局变量
-          prependData: `
-            @import "@/assets/css/_mixins.scss";
-          `
-        },
-        less: {
-          modifyVars: {
-            // 定制vant组件主题
-            hack: `true; @import "${resolve('src')}/assets/css/_vant-theme.less";`
-          }
-        },
         plugins: [
           pxtorem({
             // 配置px转换rem插件 https://github.com/cuth/postcss-pxtorem

@@ -14,6 +14,9 @@ module.exports = {
     'space-before-function-paren': ['error', {
       anonymous: 'never',
       named: 'never',
+    }],
+    'no-trailing-spaces': ['error', {
+      skipBlankLines: true
     }]
   },
   parserOptions: {
