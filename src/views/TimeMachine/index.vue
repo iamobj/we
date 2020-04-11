@@ -57,6 +57,7 @@
 
 <script>
 import { Image, Sticky } from 'vant'
+// import { reqDailyList } from '@/services/daily.js'
 export default {
   name: 'timeMeachine',
   data() {
@@ -65,7 +66,12 @@ export default {
     }
   },
   methods: {
-
+    init() {
+      // reqDailyList
+    },
+  },
+  mounted() {
+    this.init()
   },
   components: {
     [Image.name]: Image,

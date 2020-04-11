@@ -18,6 +18,15 @@ let routes = [
     }
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login'),
+    meta: {
+      title: '登录'
+    },
+    props: true
+  },
+  {
     path: '/timeMeachine',
     name: 'timeMeachine',
     component: () => import('@/views/TimeMachine'),

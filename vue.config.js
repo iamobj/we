@@ -101,7 +101,13 @@ const vueConfig = {
     port: 9697, // 端口
     disableHostCheck: true, // 内网穿透映射到外网需要添加这一行，不然会报Invalid Host header错误
     https: false, // false关闭https，true为开启
-    open: false // 自动打开浏览器
+    open: false, // 自动打开浏览器
+    proxy: {
+      '/': {
+        target: 'http://127.0.0.1:7001/api',
+        changeOrigin: true
+      }
+    }
   }
 }
 
