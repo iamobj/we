@@ -3,6 +3,7 @@ import { Toast } from 'vant'
 import Qs from 'qs'
 import $storage from '@/plugins/storage'
 import { stringify } from '@/utils/utils'
+import router from '@/router'
 
 // 默认配置
 fetch.default.timeout = 50000
@@ -139,10 +140,24 @@ fetch.interceptors.response.use(data => {
   }
 
   if (data.data && typeof data.data === 'object') {
-    if (['1996'].includes(data.data.code) && !data.config._noToLogin) {
+    if ([1996].includes(data.data.code) && !data.config._noToLogin) {
       // 无token或token异常
       $storage.delL('token')
       data.config._noErrToastTip || (data.data.msg && Toast(data.data.msg))
+
+      const currentUrl = window.location.href
+      console.log('currentUrl', currentUrl)
+      if (!currentUrl.includes('/login')) {
+        // 当前页不是登录页才跳，避免前一个页面有多个需要登录的接口导致多次跳登录页，只要第一个跳过来，之后的接口就不需要跳
+        const enterTyep = data.config._toLoginType || 'replace'
+        router[enterTyep]({
+          name: 'login',
+          query: {
+            backUrl: currentUrl,
+            enterType: enterTyep
+          }
+        })
+      }
 
       return Promise.reject(data.data)
     }

@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      tel: '18570327705',
+      tel: '',
       password: '',
     }
   },
@@ -72,22 +72,29 @@ export default {
         password: this.password
       }
       try {
-        const { data: { token } } = await reqUserLogin(params)
+        const { data } = await reqUserLogin(params)
         // 登录成功
         this.$toast('登录成功')
-        this.$storage.setL('token', token)
-
-        if (this.enterType === 'replace' && this.backUrl) {
+        this.$storage.setL('token', data.token)
+        if (data.we._id) {
+          // 有weId,把weId保存到vuex
+          this.$store.commit('setWeInfo', data.we)
+          
+          if (this.enterType === 'replace' && this.backUrl) {
           // replace进来的且有回跳地址就replace过去
-          location.replace(this.backUrl)
-        } else {
-          if (history.length) {
-            // 不是replace进来的有历史栈就back
-            this.$router.back()
+            location.replace(this.backUrl)
           } else {
+            if (history.length) {
+            // 不是replace进来的有历史栈就back
+              this.$router.back()
+            } else {
             // 没有回跳地址且没有历史栈就replace回全站首页
-            this.$router.replace({ name: 'home' })
+              this.$router.replace({ name: 'home' })
+            }
           }
+        } else {
+          // 没有weId，让创建或者绑定现有的
+
         }
       } catch (error) {
         console.log('clickLogin -> error', error)

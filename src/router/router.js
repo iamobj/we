@@ -24,14 +24,18 @@ let routes = [
     meta: {
       title: '登录'
     },
-    props: true
+    props: router => ({
+      enterType: router.query.enterType,
+      backUrl: router.query.backUrl
+    })
   },
   {
     path: '/timeMeachine',
     name: 'timeMeachine',
     component: () => import('@/views/TimeMachine'),
     meta: {
-      title: '时光机'
+      title: '时光机',
+      weId: true, // 需要有weId才能进
     }
   }
 ]
