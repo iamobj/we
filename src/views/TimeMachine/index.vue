@@ -14,80 +14,80 @@
       </div>
     </div>
 
-    <template v-if="dailys.list">
-      <van-sticky>
-        <div class="time-wrap pd-main">
-          <span class="time">{{dailys.list[0].originalDate | formatDate('Y/m/d')}}</span>
-          <!-- 这里套一层是为了隐藏在ios上的滚动条 -->
-          <div class="txt-wrap">
-            <!-- <div class="txt">生活不止眼前的苟且，还有诗和远方的田野。</div> -->
-          </div>
-          <svg-icon iconClass="time-line" class="svg--item-line" />
+    <van-sticky>
+      <div class="time-wrap pd-main">
+        <span class="time">不知道放什么</span>
+        <!-- 这里套一层是为了隐藏在ios上的滚动条 -->
+        <div class="txt-wrap">
+          <!-- <div class="txt">生活不止眼前的苟且，还有诗和远方的田野。</div> -->
         </div>
-      </van-sticky>
+        <svg-icon iconClass="time-line" class="svg--item-line" />
+      </div>
+    </van-sticky>
 
-      <!-- 内容区 -->
+    <!-- 内容区 -->
+    <van-skeleton style="margin-top: 20px" title avatar :row="3" :loading="!dailys.list">
       <main class="con-wrap pd-main">
-        <section class="item" v-for="(item) in dailys.list" :key="item.originalDate" ref="listItem">
-          <div class="item__l">{{item.originalDate | formatDate('m')}}月<br/><span>{{item.originalDate | formatDate('d')}}</span></div>
-          
-          <div class="item__r-wrap">
-            <div class="list-box" v-for="(child) in item.child" :key="child._id">
-              <div class="list__l">
-                <!-- 头像 -->
-                <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".2rem" round/>
-                <div class="hours">{{child.time}}</div>
-                <div class="line"></div>
-              </div>
+        <section class="item van-hairline--bottom" v-for="item in dailys.list" :key="item._id">
+          <div class="l fs0">
+            <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".4rem" round  />
+          </div>
+          <div class="r">
+            <!-- 昵称 -->
+            <div class="nickname">{{item.authorId.nickname}}</div>
+            <!-- 时间 -->
+            <div class="time">{{item.createdAt | formatDate()}}</div>
+            <!-- 文本 -->
+            <div class="txt">{{item.txt}}</div>
 
-              <div class="list__r">
-                <!-- 文本 -->
-                <p>{{child.txt}}</p>
-
-                <div class="operat-wrap">
-                  <!-- 点赞 -->
-                  <svg-icon iconClass="love" class="svg--like" :class="{'svg--like--1' : child.likes.length}" />
-                  <!-- 评论 -->
-                  <svg-icon :iconClass="child.comments.length ? 'love-letter1':'love-letter0' " class="svg--comment" />
-                </div>
-              </div>
+            <!-- 操作 -->
+            <div class="operat-wrap">
+              <!-- 点赞 -->
+              <svg-icon iconClass="love" class="svg--like" :class="{'svg--like--1' : item.likes.length}" />
+              <!-- 评论 -->
+              <svg-icon :iconClass="item.comments.length ? 'love-letter1':'love-letter0' " class="svg--comment" />
             </div>
           </div>
         </section>
+        
+        <van-divider v-if="loadMore">正在加载更多...</van-divider>
+
+        <van-divider v-if="loadFinish">已经到底啦</van-divider>
       </main>
-    </template>
+    </van-skeleton>
+    
+    <!-- 暂无数据 -->
+    <van-empty v-if="dailys.list && !dailys.list.length" description="暂无数据" />
+
+    <!-- 发布按钮 -->
+    <svg-icon iconClass="release" class="svg--release" />
   </div>
 </template>
 
 <script>
-import { Image, Sticky } from 'vant'
+import { Image, Sticky, Skeleton, Empty, Divider } from 'vant'
 import { reqDailyList } from '@/services/daily.js'
-import { formatDate } from '@/utils/format.js'
 export default {
   name: 'timeMeachine',
   data() {
     return {
       dailys: {},
       pageNo: 1,
-      pageSize: 20,
+      pageSize: 10,
       weInfo: this.$store.getters.getWeInfo,
-      listTop: [],
+      loadMore: false,
+      loadFinish: false,
     }
   },
   methods: {
     async init() {
       await this.getDailyList()
       this.$nextTick(() => {
-        this.$refs.listItem.forEach(item => {
-          const top = item.offsetTop
-          this.listTop.push(top)
+        // 监听页面滚动
+        document.addEventListener('scroll', this.pageScroll)
+        this.$once('hook:beforeDestroy', () => {
+          document.removeEventListener('scroll', this.pageScroll)
         })
-      })
-
-      // 监听页面滚动
-      document.addEventListener('scroll', this.pageScroll)
-      this.$once('hook:beforeDestroy', () => {
-        document.removeEventListener('scroll', this.pageScroll)
       })
     },
     // 获取日常数据
@@ -99,45 +99,39 @@ export default {
       }
       try {
         const { data } = await reqDailyList(params)
-        data.list = this.handleDailyList(data.list)
+        this.loadFinish = data.list.length < this.pageSize
+        data.list = this.pageNo === 1 ? data.list : [...this.dailys.list, ...data.list]
+
         this.dailys = data
       } catch (error) {
         
       }
     },
-    // 处理DailyLis数据，按天分组，同一天放在一个数组里
-    handleDailyList(arr) {
-      const newList = []
-      arr.forEach(item => {
-        const str = formatDate(item.createdAt, 'Y-m-d&H:i')
-        const dateArr = str.split('&')
-        item.date = dateArr[0]
-        item.time = dateArr[1]
-
-        let newListIndex = -1
-        const isHas = newList.some((newItem, newIndex) => {
-          if (item.date === newItem.date) {
-            newListIndex = newIndex
-            return true
-          }
-        })
-        if (isHas) {
-          newList[newListIndex].child.push(item)
-        } else {
-          newList.push({
-            date: item.date,
-            originalDate: item.createdAt,
-            child: [item]
-          })
-        }
-      })
-      return newList
-    },
     // 页面滚动事件
     pageScroll(e) {
-      const scrollTop = e.target.documentElement.scrollTop
-      console.log('pageScroll -> scrollTop', scrollTop)
-      this.pageScrollTop = scrollTop
+      const offset = 300 // 滚动条与底部距离小于 offset 时触发load事件
+
+      // 兼容方式获取页面滚动top
+      let scrollTop
+      if (typeof window.pageYOffset !== 'undefined') {
+        scrollTop = window.pageYOffset
+      } else if (typeof document.compatMode !== 'undefined' && document.compatMode !== 'BackCompat') {
+        scrollTop = document.documentElement.scrollTop
+      } else if (typeof document.body !== 'undefined') {
+        scrollTop = document.body.scrollTop
+      }
+      
+      const scrollHeight = e.target.documentElement.scrollHeight
+      const clientHeight = e.target.documentElement.clientHeight
+      
+      if ((scrollHeight - clientHeight - offset) <= scrollTop && !this.loadMore && !this.loadFinish) {
+        this.loadMore = true
+        this.pageNo++
+
+        this.getDailyList().then(() => {
+          this.loadMore = false
+        })
+      }
     }
   },
   mounted() {
@@ -146,6 +140,9 @@ export default {
   components: {
     [Image.name]: Image,
     [Sticky.name]: Sticky,
+    [Skeleton.name]: Skeleton,
+    [Empty.name]: Empty,
+    [Divider.name]: Divider,
   }
 }
 
@@ -183,7 +180,7 @@ export default {
     display: flex;
     align-items: center;
     height: 40px;
-    background-color: #fff;
+    background-color: #fbfbfb;
     .time {
       font-size: 14px;
       font-weight: bold;
@@ -213,78 +210,59 @@ export default {
     }
   }
   .con-wrap {
-    margin-top: 45px;
     .item {
       display: flex;
-      &:not(:first-child) {
-        margin-top: 5px;
-      }
-      &__l {
-        font-size: 14px;
-        font-weight: bold;
-        text-align: right;
+      padding: 20px 0;
+      .l {
         flex-shrink: 0;
-        > span {
-          font-size: 12px;
-          // color: #999;
+        .avatar {
+          border: 5px solid #fff;
         }
       }
-      &__r-wrap {
+      .r {
         flex: 1;
-        .list-box {
+        width: 0;
+        margin-left: 16px;
+        .nickname {
+          font-size: 14px;
+        }
+        .time {
+          font-size: 10px;
+          color: #b2b2b2;
+        }
+        .txt {
+          margin-top: 16px;
+          font-size: 14px;
+        }
+        .operat-wrap {
+          margin-top: 16px;
           display: flex;
-          &:not(:first-child) {
-            margin-top: 5px;
-          }
-          .list__l {
-            margin-left: 10px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            .avatar {
-            }
-            .hours {
-              margin: 5px 0;
-              font-size: 10px;
-              color: #999;
-            }
-            .line {
-              margin-bottom: 5px;
-              width: 1px;
-              flex: 1;
-              background-color: #999;
+          align-items: center;
+          .svg--like {
+            margin-left: auto;
+            width: 24px;
+            height: 24px;
+            color: #999;
+            &--1 {
+              color: #FF3B50;
             }
           }
-          .list__r {
-            flex: 1;
-            margin-left: 15px;
-            padding-bottom: 15px;
-            font-size: 14px;
-            .operat-wrap {
-              margin-top: 10px;
-              display: flex;
-              align-items: center;
-              .svg--like {
-                margin-left: auto;
-                width: 24px;
-                height: 24px;
-                color: #999;
-                &--1 {
-                  color: #FF3B50;
-                }
-              }
-              .svg--comment {
-                margin-left: 20px;
-                width: 20px;
-                height: 20px;
-              }
-            }
+          .svg--comment {
+            margin-left: 20px;
+            width: 20px;
+            height: 20px;
           }
         }
       }
-      
     }
+  }
+  .svg--release {
+    position: fixed;
+    right: 20px;
+    bottom: 70px;
+    z-index: 99;
+    width: 50px;
+    height: 50px;
   }
 }
 </style>
