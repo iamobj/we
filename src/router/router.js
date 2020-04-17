@@ -37,6 +37,24 @@ let routes = [
       title: '时光机',
       weId: true, // 需要有weId才能进
     }
+  },
+  {
+    path: '/releaseDaily',
+    name: 'releaseDaily',
+    component: () => import('@/views/ReleaseDaily'),
+    meta: {
+      title: '新增时光',
+      weId: true, // 需要有weId才能进
+    }
+  },
+  {
+    path: '/viewDaily',
+    name: 'viewDaily',
+    component: () => import('@/views/ViewDaily'),
+    meta: {
+      title: '查看时光',
+      weId: true, // 需要有weId才能进
+    }
   }
 ]
 

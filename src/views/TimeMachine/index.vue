@@ -10,20 +10,20 @@
       <div class="con pd-main">
         <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".5rem" round/>
         <van-image class="avatar avatar--girl" :src="require('@/assets/img/girl_avatar.png')" width=".5rem" round/>
-        <div class="tip">共记录<div>{{dailys.count}}个时刻</div></div>
+        <div class="tip">共记录<div>{{dailys.count}}个时光</div></div>
       </div>
     </div>
 
-    <van-sticky>
+    <!-- <van-sticky>
       <div class="time-wrap pd-main">
-        <span class="time">不知道放什么</span>
+        <span class="time">不知道放什么</span> -->
         <!-- 这里套一层是为了隐藏在ios上的滚动条 -->
-        <div class="txt-wrap">
+        <!-- <div class="txt-wrap"> -->
           <!-- <div class="txt">生活不止眼前的苟且，还有诗和远方的田野。</div> -->
-        </div>
+        <!-- </div>
         <svg-icon iconClass="time-line" class="svg--item-line" />
       </div>
-    </van-sticky>
+    </van-sticky> -->
 
     <!-- 内容区 -->
     <van-skeleton style="margin-top: 20px" title avatar :row="3" :loading="!dailys.list">
@@ -38,7 +38,7 @@
             <!-- 时间 -->
             <div class="time">{{item.createdAt | formatDate()}}</div>
             <!-- 文本 -->
-            <div class="txt">{{item.txt}}</div>
+            <div class="txt van-multi-ellipsis--l3">{{item.txt}}</div>
 
             <!-- 操作 -->
             <div class="operat-wrap">
@@ -60,7 +60,7 @@
     <van-empty v-if="dailys.list && !dailys.list.length" description="暂无数据" />
 
     <!-- 发布按钮 -->
-    <svg-icon iconClass="release" class="svg--release" />
+    <svg-icon iconClass="release" class="svg--release" @click.native="toReleasePage" />
   </div>
 </template>
 
@@ -89,6 +89,10 @@ export default {
           document.removeEventListener('scroll', this.pageScroll)
         })
       })
+    },
+    // 前往发布页面
+    toReleasePage() {
+      this.$router.push({ name: 'releaseDaily' })
     },
     // 获取日常数据
     async getDailyList() {
@@ -161,7 +165,6 @@ export default {
       align-items: center;
       width: 100%;
       .avatar {
-        border: 5px solid #fff;
         &.avatar--girl {
           margin-left: -10px;
         }
@@ -215,9 +218,6 @@ export default {
       padding: 20px 0;
       .l {
         flex-shrink: 0;
-        .avatar {
-          border: 5px solid #fff;
-        }
       }
       .r {
         flex: 1;
@@ -233,6 +233,7 @@ export default {
         .txt {
           margin-top: 16px;
           font-size: 14px;
+          white-space: pre-line;
         }
         .operat-wrap {
           margin-top: 16px;
