@@ -28,7 +28,7 @@
     <!-- 内容区 -->
     <van-skeleton style="margin-top: 20px" title avatar :row="3" :loading="!dailys.list">
       <main class="con-wrap pd-main">
-        <section class="item van-hairline--bottom" v-for="item in dailys.list" :key="item._id">
+        <section class="item van-hairline--bottom" v-for="item in dailys.list" :key="item._id" @click="toViewDailyDetail(item)">
           <div class="l fs0">
             <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".4rem" round  />
           </div>
@@ -36,7 +36,7 @@
             <!-- 昵称 -->
             <div class="nickname">{{item.authorId.nickname}}</div>
             <!-- 时间 -->
-            <div class="time">{{item.createdAt | formatDate()}}</div>
+            <div class="time">{{item.updatedAt | formatDate()}}</div>
             <!-- 文本 -->
             <div class="txt van-multi-ellipsis--l3">{{item.txt}}</div>
 
@@ -89,6 +89,10 @@ export default {
           document.removeEventListener('scroll', this.pageScroll)
         })
       })
+    },
+    // 前往查看时光详情
+    toViewDailyDetail(item) {
+      this.$router.push({ name: 'viewDaily', params: { dailyId: item._id } })
     },
     // 前往发布页面
     toReleasePage() {

@@ -30,6 +30,10 @@ export default {
   },
   methods: {
     releaseDaily() {
+      if (!this.txt) {
+        this.$toast('内容不能为空')
+        return
+      }
       const params = {
         weId: this.weId,
         txt: this.txt

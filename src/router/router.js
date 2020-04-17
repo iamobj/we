@@ -48,13 +48,14 @@ let routes = [
     }
   },
   {
-    path: '/viewDaily',
+    path: '/viewDaily/:dailyId',
     name: 'viewDaily',
     component: () => import('@/views/ViewDaily'),
     meta: {
       title: '查看时光',
       weId: true, // 需要有weId才能进
-    }
+    },
+    props: true
   }
 ]
 
