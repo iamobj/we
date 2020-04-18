@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    首页
+    首页还在构思中。。。
   </div>
 </template>
 
@@ -11,3 +11,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.home {
+  font-size: 20px;
+  text-align: center;
+}
+</style>

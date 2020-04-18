@@ -19,7 +19,7 @@
         <span class="time">不知道放什么</span> -->
         <!-- 这里套一层是为了隐藏在ios上的滚动条 -->
         <!-- <div class="txt-wrap"> -->
-          <!-- <div class="txt">生活不止眼前的苟且，还有诗和远方的田野。</div> -->
+          <!-- <div class="txt">我有个愿望，待我们白头时，能细数有你在的时光！</div> -->
         <!-- </div>
         <svg-icon iconClass="time-line" class="svg--item-line" />
       </div>
@@ -61,11 +61,14 @@
 
     <!-- 发布按钮 -->
     <svg-icon iconClass="release" class="svg--release" @click.native="toReleasePage" />
+
+    <!-- tabbar -->
+    
   </div>
 </template>
 
 <script>
-import { Image, Sticky, Skeleton, Empty, Divider } from 'vant'
+import { Image, Sticky, Skeleton, Empty, Divider, Tabbar, TabbarItem } from 'vant'
 import { reqDailyList } from '@/services/daily.js'
 export default {
   name: 'timeMeachine',
@@ -151,6 +154,8 @@ export default {
     [Skeleton.name]: Skeleton,
     [Empty.name]: Empty,
     [Divider.name]: Divider,
+    [TabbarItem.name]: TabbarItem,
+    [Tabbar.name]: Tabbar,
   }
 }
 

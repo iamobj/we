@@ -56,7 +56,25 @@ let routes = [
       weId: true, // 需要有weId才能进
     },
     props: true
-  }
+  },
+  {
+    path: '/mine',
+    name: 'mine',
+    component: () => import('@/views/mine'),
+    meta: {
+      title: '我的',
+      weId: true, // 需要有weId才能进
+    }
+  },
+  {
+    path: '/newsList',
+    name: 'newsList',
+    component: () => import('@/views/NewsList'),
+    meta: {
+      title: '消息列表',
+      weId: true, // 需要有weId才能进
+    }
+  },
 ]
 
 if (process.env.NODE_ENV !== 'production') {
