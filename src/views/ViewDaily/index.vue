@@ -8,11 +8,11 @@
         
         <div class="info">
           <div class="nickname">{{dailyDetail.authorId.nickname}}</div>
-          <div class="time">{{dailyDetail.updatedAt | formatDate()}}</div>
+          <div class="time">{{dailyDetail.createdAt | formatDate()}}</div>
         </div>
       </div>
       <!-- 文本内容 -->
-      <div class="txt">{{dailyDetail.txt}}</div>
+      <div class="txt van-hairline--bottom">{{dailyDetail.txt}}</div>
 
       <!-- 评论 -->
       <div class="comment-wrap" v-if="dailyDetail.comments.length">
@@ -24,7 +24,7 @@
             <!-- 昵称 -->
             <div class="nickname">{{item.authorId.nickname}}</div>
             <!-- 时间 -->
-            <div class="time">{{item.updatedAt | formatDate()}}</div>
+            <div class="time">{{item.createdAt | formatDate()}}</div>
             <!-- 内容 -->
             <div class="txt">{{item.txt}}</div>
           </div>
@@ -121,12 +121,13 @@ export default {
   
   .txt {
     margin-top: 16px;
+    padding-bottom: 10px;
     font-size: 14px;
     white-space: pre-line;
   }
 
   .comment-wrap {
-    margin-top: 12px;
+    margin-top: 10px;
     .item {
       display: flex;
       &:not(:first-child) {

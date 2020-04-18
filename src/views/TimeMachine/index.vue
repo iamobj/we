@@ -36,7 +36,7 @@
             <!-- 昵称 -->
             <div class="nickname">{{item.authorId.nickname}}</div>
             <!-- 时间 -->
-            <div class="time">{{item.updatedAt | formatDate()}}</div>
+            <div class="time">{{item.createdAt | formatDate()}}</div>
             <!-- 文本 -->
             <div class="txt van-multi-ellipsis--l3">{{item.txt}}</div>
 
