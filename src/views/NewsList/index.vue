@@ -5,7 +5,7 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了">
-      <van-swipe-cell v-for="(item,index) in [1,2,3]" :key="index">
+      <van-swipe-cell v-for="item in notice.list" :key="item._id">
         <div class="item fs0">
           <div class="l">
             <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".4rem" round/>
@@ -33,16 +33,35 @@
 
 <script>
 import { SwipeCell, List, Image, Button } from 'vant'
+import { reqNoticeList } from '@/services/notice.js'
 export default {
   name: 'newsList',
   data() {
     return {
       loading: false,
-      finished: true
+      finished: true,
+      pageNo: 1,
+      pageSize: 2,
+      notice: {}
     }
   },
   methods: {
-    
+    init() {
+      this.getNoticeList()
+    },
+    // 获取消息数据
+    getNoticeList() {
+      const params = {
+        pageNo: this.pageNo,
+        pageSize: this.pageSize
+      }
+      reqNoticeList(params).then(res => {
+        this.notice = res.data
+      })
+    }
+  },
+  mounted() {
+    this.init()
   },
   components: {
     [SwipeCell.name]: SwipeCell,
