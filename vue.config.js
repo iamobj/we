@@ -35,22 +35,22 @@ const vueConfig = {
     }
 
     /* svg loader 配置 Start */
-    // const svgRule = config.module.rule('svg')
-    // svgRule.uses.clear() // 清除已有的loader, 如果不这样做会添加在此loader之后
-    // svgRule.exclude.add(/node_modules/) // 正则匹配排除node_modules目录
-    // svgRule // 添加svg新的loader处理
-    //   .test(/\.svg$/)
-    //   .use('svg-sprite-loader')
-    //   .loader('svg-sprite-loader')
-    //   .options({
-    //     symbolId: 'icon-[name]',
-    //   })
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear() // 清除已有的loader, 如果不这样做会添加在此loader之后
+    svgRule.exclude.add(/node_modules/) // 正则匹配排除node_modules目录
+    svgRule // 添加svg新的loader处理
+      .test(/\.svg$/)
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]',
+      })
 
     // 修改images-loader 排除对svg文件的处理
-    // const imagesRule = config.module.rule('images')
-    // imagesRule.exclude.add(resolve('src/plugins/svgIcon'))
-    // imagesRule
-    //   .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+    const imagesRule = config.module.rule('images')
+    imagesRule.exclude.add(resolve('src/icons'))
+    imagesRule
+      .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
     /* svg loader 配置 End */
   },
 
@@ -67,19 +67,19 @@ const vueConfig = {
 
   css: {
     loaderOptions: {
+      scss: {
+        // 向全局scss样式传入共享的全局变量
+        prependData: `
+          @import "@/assets/css/_mixins.scss";
+        `
+      },
+      less: {
+        modifyVars: {
+          // 定制vant组件主题
+          hack: `true; @import "${resolve('src')}/assets/css/_vant-theme.less";`
+        }
+      },
       postcss: {
-        scss: {
-          // 向全局scss样式传入共享的全局变量
-          prependData: `
-            @import "@/assets/css/_mixins.scss";
-          `
-        },
-        less: {
-          modifyVars: {
-            // 定制vant组件主题
-            hack: `true; @import "${resolve('src')}/assets/css/_vant-theme.less";`
-          }
-        },
         plugins: [
           pxtorem({
             // 配置px转换rem插件 https://github.com/cuth/postcss-pxtorem
@@ -101,7 +101,14 @@ const vueConfig = {
     port: 9697, // 端口
     disableHostCheck: true, // 内网穿透映射到外网需要添加这一行，不然会报Invalid Host header错误
     https: false, // false关闭https，true为开启
-    open: false // 自动打开浏览器
+    open: false, // 自动打开浏览器
+    proxy: {
+      '/': {
+        target: 'http://127.0.0.1:7001/api',
+        // target: 'https://we.assetss.cn/api', // 生产环境
+        changeOrigin: true
+      }
+    }
   }
 }
 
