@@ -105,6 +105,7 @@ const vueConfig = {
     proxy: {
       '/': {
         target: 'http://127.0.0.1:7001/api',
+        // target: 'https://we.assetss.cn/api', // 生产环境
         changeOrigin: true
       }
     }

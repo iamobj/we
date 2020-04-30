@@ -4,9 +4,10 @@ import { Toast } from 'vant'
 import $store from '@/store'
 import { reqWeInfo } from '@/services/we.js'
 import { storage as $storage } from '@/plugins'
+import { mergeBeforeEachHook } from '@/plugins/VKeepAlive'
 
 // 路由全局前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(mergeBeforeEachHook((to, from, next) => {
   // 进每个页面前都清掉toast,避免上个页面请求遗留的toast，切换页面还显示的bug
   Toast.clear()
 
@@ -39,7 +40,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-})
+}))
 
 // 路由全局后置守卫
 router.afterEach((to, from) => {

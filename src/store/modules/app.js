@@ -1,7 +1,7 @@
 export default {
   state: {
     svgIconMap: [], // svg文件数组，供svgList页面使用
-    weInfo: null,
+    weInfo: null
   },
   getters: {
     getSvgIconMap: state => state.svgIconMap,

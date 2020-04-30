@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <router-view />
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <VKeepAliveChain>
+      <router-view v-if="!$route.meta.keepAlive"/>
+    </VKeepAliveChain>
 
     <van-tabbar route placeholder v-if="showTabbar" active-color="#ff455c">
       <van-tabbar-item
@@ -8,6 +13,7 @@
         :key="item.id"
         :to="item.to"
         :icon="item.icon"
+        :dot="item.dot"
       >
         {{item.label}}
       </van-tabbar-item>
@@ -17,6 +23,7 @@
 
 <script>
 import { Tabbar, TabbarItem } from 'vant'
+import { reqNoticeNew } from '@/services/notice.js'
 export default {
   data() {
     return {
@@ -37,22 +44,52 @@ export default {
           id: 3,
           to: { name: 'mine' },
           label: '我的',
-          icon: 'smile'
+          icon: 'smile',
+          dot: false
         }
-      ]
+      ],
+      showTabbar: false
     }
   },
-  computed: {
-    showTabbar: function() {
-      const routeNames = []
-      this.tabbars.forEach(item => {
-        routeNames.push(item.to.name)
+  watch: {
+    '$route.name': function(nV, oV) {
+      if (this.showTabbarRouteNames.includes(nV)) {
+        this.showTabbar = true
+        this.$storage.getL('token') && this.getNoticeNewNum()
+      } else {
+        this.showTabbar = false
+      }
+    },
+    // showTabbar: {
+    //   handler(nV, oV) {
+    //     if (nV) {
+    //       this.$storage.getL('token') && this.getNoticeNewNum()
+    //     }
+    //   },
+    //   immediate: true
+    // }
+  },
+  methods: {
+    // 获取未读消息通知数量
+    getNoticeNewNum() {
+      reqNoticeNew({ _noToLogin: 1 }).then(res => {
+        const { data: { count } } = res
+        if (count) {
+          const obj = this.tabbars.find(item => {
+            return item.id === 3
+          })
+          obj.dot = true
+        }
       })
-      return routeNames.includes(this.$route.name)
     }
+  },
+  created() {
+    this.showTabbarRouteNames = []
+    this.tabbars.forEach(item => {
+      this.showTabbarRouteNames.push(item.to.name)
+    })
   },
   mounted() {
-    console.log(this.$route)
   },
   components: {
     [TabbarItem.name]: TabbarItem,

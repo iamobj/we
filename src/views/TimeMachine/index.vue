@@ -5,32 +5,34 @@
       <!-- 封面背景 -->
       <van-image
         width="100vw"
-        height="2rem" />
+        height="2rem"
+        :src="weInfo.dailyCover | formatAssets"
+        fit="cover" />
 
       <div class="con pd-main">
-        <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".5rem" round/>
-        <van-image class="avatar avatar--girl" :src="require('@/assets/img/girl_avatar.png')" width=".5rem" round/>
+        <van-image class="avatar" :src="weInfo.boyId.avatar | formatAssets" width=".5rem" height=".5rem" round/>
+        <van-image class="avatar avatar--girl" :src="weInfo.girlId.avatar | formatAssets" width=".5rem" height=".5rem" round/>
         <div class="tip">共记录<div>{{dailys.count}}个时光</div></div>
       </div>
     </div>
 
-    <!-- <van-sticky>
+    <van-sticky>
       <div class="time-wrap pd-main">
-        <span class="time">不知道放什么</span> -->
+        <!-- <span class="time">不知道放什么</span> -->
         <!-- 这里套一层是为了隐藏在ios上的滚动条 -->
-        <!-- <div class="txt-wrap"> -->
-          <!-- <div class="txt">我有个愿望，待我们白头时，能细数有你在的时光！</div> -->
-        <!-- </div>
-        <svg-icon iconClass="time-line" class="svg--item-line" />
+        <div class="txt-wrap">
+          <div class="txt">我有个愿望，待我们白头时，能细数有你在的时光！</div>
+        </div>
+        <!-- <svg-icon iconClass="time-line" class="svg--item-line" /> -->
       </div>
-    </van-sticky> -->
+    </van-sticky>
 
     <!-- 内容区 -->
     <van-skeleton style="margin-top: 20px" title avatar :row="3" :loading="!dailys.list">
-      <main class="con-wrap pd-main">
-        <section class="item van-hairline--bottom" v-for="item in dailys.list" :key="item._id" @click="toViewDailyDetail(item)">
+      <main class="con-wrap pd-main" v-if="dailys.list && dailys.list.length">
+        <section class="item van-hairline--bottom" v-for="(item,index) in dailys.list" :key="item._id" @click="toViewDailyDetail(item, index)">
           <div class="l fs0">
-            <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".4rem" round  />
+            <van-image class="avatar" :src="item.authorId.avatar | formatAssets" width=".4rem" height=".4rem" round  />
           </div>
           <div class="r">
             <!-- 昵称 -->
@@ -43,7 +45,7 @@
             <!-- 操作 -->
             <div class="operat-wrap">
               <!-- 点赞 -->
-              <svg-icon iconClass="love" class="svg--like" :class="{'svg--like--1' : item.likes.length}" />
+              <!-- <svg-icon iconClass="love" class="svg--like" :class="{'svg--like--1' : item.likes.length}" /> -->
               <!-- 评论 -->
               <svg-icon :iconClass="item.comments.length ? 'love-letter1':'love-letter0' " class="svg--comment" />
             </div>
@@ -69,7 +71,7 @@
 
 <script>
 import { Image, Sticky, Skeleton, Empty, Divider, Tabbar, TabbarItem } from 'vant'
-import { reqDailyList } from '@/services/daily.js'
+import { reqDailyList, reqDailyDetail } from '@/services/daily.js'
 export default {
   name: 'timeMeachine',
   data() {
@@ -80,6 +82,7 @@ export default {
       weInfo: this.$store.getters.getWeInfo,
       loadMore: false,
       loadFinish: false,
+      toDetailIndex: null
     }
   },
   methods: {
@@ -94,7 +97,8 @@ export default {
       })
     },
     // 前往查看时光详情
-    toViewDailyDetail(item) {
+    toViewDailyDetail(item, index) {
+      this.toDetailIndex = index
       this.$router.push({ name: 'viewDaily', params: { dailyId: item._id } })
     },
     // 前往发布页面
@@ -143,10 +147,22 @@ export default {
           this.loadMore = false
         })
       }
+    },
+    // 从详情页回来更新当前数据
+    async updateItemData() {
+      const index = this.toDetailIndex
+      if (index !== null) {
+        this.toDetailIndex = null
+        const { data } = await reqDailyDetail(this.dailys.list[index]._id)
+        this.$set(this.dailys.list, index, data)
+      }
     }
   },
   mounted() {
     this.init()
+  },
+  activated() {
+    this.updateItemData()
   },
   components: {
     [Image.name]: Image,
@@ -248,8 +264,8 @@ export default {
           margin-top: 16px;
           display: flex;
           align-items: center;
+          justify-content: flex-end;
           .svg--like {
-            margin-left: auto;
             width: 24px;
             height: 24px;
             color: #999;

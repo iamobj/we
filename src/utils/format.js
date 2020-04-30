@@ -8,7 +8,7 @@
  * @param {string} [format="Y-m-d H:i:s"]
  * @returns {string}
  */
-export function formatDate(date, format = 'Y-m-d H:i:s') {
+export const formatDate = (date, format = 'Y-m-d H:i:s') => {
   // 转为date对象
   const realDate = new Date(date)
 
@@ -33,4 +33,12 @@ export function formatDate(date, format = 'Y-m-d H:i:s') {
       s: second
     })[matches]
   })
+}
+
+/**
+ * 格式化资源地址
+ * @param {string} val 后台返回的资源路劲
+ */
+export const formatAssets = (val) => {
+  return val ? `${process.env.VUE_APP_ASSETS_BASE_URL}${val}` : ''
 }

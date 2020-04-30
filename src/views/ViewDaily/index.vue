@@ -4,7 +4,7 @@
     <van-skeleton title avatar :row="6" :loading="loading">
       <template v-if="dailyDetail.authorId">
       <div class="top-wrap">
-        <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".4rem" round/>
+        <van-image class="avatar" :src="dailyDetail.authorId.avatar | formatAssets" width=".4rem" height=".4rem" round/>
         
         <div class="info">
           <div class="nickname">{{dailyDetail.authorId.nickname}}</div>
@@ -18,7 +18,7 @@
       <div class="comment-wrap" v-if="dailyDetail.comments.length">
         <div class="item" v-for="item in dailyDetail.comments" :key="item._id">
           <div class="l fs0">
-            <van-image class="avatar" :src="require('@/assets/img/boy_avatar.png')" width=".2rem" round/>
+            <van-image class="avatar" :src="item.authorId.avatar | formatAssets" width=".2rem" height=".2rem" round/>
           </div>
           <div class="r">
             <!-- 昵称 -->
@@ -65,11 +65,14 @@ export default {
     }
   },
   methods: {
-    init() {
-      reqDailyDetail(this.dailyId).then(res => {
+    async init() {
+      try {
+        const res = await reqDailyDetail(this.dailyId)
         this.dailyDetail = res.data
         this.loading = false
-      })
+      } catch (error) {
+        console.log('init -> error', error)
+      }
     },
     // 发送评论
     sendComment() {
@@ -81,7 +84,7 @@ export default {
         dailyId: this.dailyId,
         txt: this.comment
       }
-      reqDailyComment(params).then(res => {
+      reqDailyComment(params).then(async res => {
         this.comment = ''
         this.init()
       })

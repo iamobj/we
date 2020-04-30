@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import fetch from './fetch'
 import storage from './storage'
-import { formatDate } from '@/utils/format'
+import { formatDate, formatAssets } from '@/utils/format'
 import mixins from './mixins'
+import { VKeepAliveChain } from './VKeepAlive'
 
 // 自动注册全局插件/组件
 const plugins = [
   storage,
-  fetch
+  fetch,
+  VKeepAliveChain
 ]
 plugins.forEach(item => {
   Vue.use(item)
@@ -15,10 +17,17 @@ plugins.forEach(item => {
 
 // 自动注册全局filter
 const filter = [
-  formatDate
+  {
+    name: 'formatDate',
+    fn: formatDate
+  },
+  {
+    name: 'formatAssets',
+    fn: formatAssets
+  },
 ]
 filter.forEach(item => {
-  Vue.filter(item.name, item)
+  Vue.filter(item.name, item.fn)
 })
 
 // 自动注册全局mixin
@@ -28,5 +37,5 @@ mixins.forEach(item => {
 
 export {
   fetch,
-  storage
+  storage,
 }

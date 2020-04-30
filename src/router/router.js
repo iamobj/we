@@ -14,7 +14,8 @@ let routes = [
     name: 'home',
     component: Home,
     meta: {
-      title: '首页'
+      title: '首页',
+      weId: true,
     }
   },
   {
@@ -36,6 +37,7 @@ let routes = [
     meta: {
       title: '时光机',
       weId: true, // 需要有weId才能进
+      cacheTo: ['viewDaily']
     }
   },
   {
@@ -73,6 +75,7 @@ let routes = [
     meta: {
       title: '消息列表',
       weId: true, // 需要有weId才能进
+      cacheTo: ['viewDaily']
     }
   },
 ]
