@@ -60,26 +60,16 @@ export default {
         this.showTabbar = false
       }
     },
-    // showTabbar: {
-    //   handler(nV, oV) {
-    //     if (nV) {
-    //       this.$storage.getL('token') && this.getNoticeNewNum()
-    //     }
-    //   },
-    //   immediate: true
-    // }
   },
   methods: {
     // 获取未读消息通知数量
     getNoticeNewNum() {
       reqNoticeNew({ _noToLogin: 1 }).then(res => {
         const { data: { count } } = res
-        if (count) {
-          const obj = this.tabbars.find(item => {
-            return item.id === 3
-          })
-          obj.dot = true
-        }
+        const obj = this.tabbars.find(item => {
+          return item.id === 3
+        })
+        obj.dot = !!count
       })
     }
   },

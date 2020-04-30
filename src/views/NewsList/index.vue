@@ -24,7 +24,7 @@
                 </div>
 
                 <template v-if="item.type === NOTICE.TYPE.COMMENT">
-                  <div class="comment">评论你：{{item.content}}</div>
+                  <div class="comment">评论：{{item.content}}</div>
                   <div class="quote"><span class="van-multi-ellipsis--l3">{{item.quoteDailyId.txt}}</span></div>
                 </template>
               </div>
