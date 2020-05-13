@@ -23,7 +23,6 @@
 
 <script>
 import { Tabbar, TabbarItem } from 'vant'
-import { reqNoticeNew } from '@/services/notice.js'
 export default {
   data() {
     return {
@@ -64,7 +63,7 @@ export default {
   methods: {
     // 获取未读消息通知数量
     getNoticeNewNum() {
-      reqNoticeNew({ _noToLogin: 1 }).then(res => {
+      this.$api.notice.reqNoticeNew({ _noToLogin: 1 }).then(res => {
         const { data: { count } } = res
         const obj = this.tabbars.find(item => {
           return item.id === 3
