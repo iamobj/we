@@ -6,6 +6,8 @@ import '@/assets/css/index.scss'
 import '@/assets/js/vantCustom'
 import '@/icons'
 import '@/plugins'
+import services from '@/services'
+Vue.use(services)
 
 Vue.config.productionTip = false
 

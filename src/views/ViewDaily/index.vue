@@ -48,7 +48,6 @@
 
 <script>
 import { Image, Field, Button, Skeleton } from 'vant'
-import { reqDailyDetail, reqDailyComment } from '@/services/daily.js'
 export default {
   name: 'viewDaily',
   props: {
@@ -67,7 +66,7 @@ export default {
   methods: {
     async init() {
       try {
-        const res = await reqDailyDetail(this.dailyId)
+        const res = await this.$api.daily.reqDailyDetail(this.dailyId)
         this.dailyDetail = res.data
         this.loading = false
       } catch (error) {
@@ -84,7 +83,7 @@ export default {
         dailyId: this.dailyId,
         txt: this.comment
       }
-      reqDailyComment(params).then(async res => {
+      this.$api.daily.reqDailyComment(params).then(async res => {
         this.comment = ''
         this.init()
       })

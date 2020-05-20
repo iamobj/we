@@ -22,8 +22,6 @@
 
 <script>
 import { Image, Cell, CellGroup, Sticky } from 'vant'
-import { reqNoticeNew } from '@/services/notice.js'
-import { reqUserInfo } from '@/services/user.js'
 export default {
   name: 'mine',
   data() {
@@ -44,14 +42,14 @@ export default {
     },
     // 获取未读消息通知数量
     getNoticeNewNum() {
-      reqNoticeNew().then(res => {
+      this.$api.notice.reqNoticeNew().then(res => {
         const { data: { count } } = res
         this.noticeNewNum = count
       })
     },
     // 获取用户信息
     getUserInfo() {
-      reqUserInfo().then(res => {
+      this.$api.user.reqUserInfo().then(res => {
         this.userInfo = res.data
       })
     }

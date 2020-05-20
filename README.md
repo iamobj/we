@@ -1,24 +1,78 @@
-# we
+# we-项目前端代码
 
-## Project setup
+一款帮助情侣/恋人记录生活点滴的程序，记录幸福，记录时光，留住你们的美好时光。
+项目只开源了前端代码，关于后端代码的技术栈和一些经验可以查阅我的博文记录首次从零到部署全栈开发
+
+## 演示地址
+
+项目是移动端项目，手机直接扫码，电脑打开网址后f12切换到移动端浏览
+
+![](https://raw.githubusercontent.com/iamobj/graph-bed/master/we/QR_code.png)
+
+测试环境：[http://nas.assetss.cn:10004](http://nas.assetss.cn:10004)（演示地址用的测试环境，线上生产环境就不放了，生产服务器是小机子，经不住玩，测试环境的机子是我家自己分配的，如果地址进不去，可能我电脑关机或者断网了:joy:测试环境就没部署https证书了，生产环境有部署，关于怎么部署https，可以查阅上面那篇博文）
+测试账号：
+
+- 男号
+  18500000001----we123456
+- 女号
+  18500000002----we123456
+
+## 技术栈
+Vue全家桶（vue2, vue-router, vuex）+ axios + vant（UI库）+ sass + svg（图标来源于阿里的[Iconfont]()）
+
+### 功能列表
+- [x] 首页（首页暂时还没什么好计划，临时放了个背景图，加相识天数计时）
+- [x] 时光机（发布时光、查看时光、评论时光）
+- [x] 我的（消息列表）
+- [x] 登录
+- [ ] 注册（接口已经写了，但是前端还没有写注册的功能）
+
+- [ ] 发布时光支持图片（图片使用阿里云oss保存）
+- [ ] 纪念日功能
+- [ ] 姨妈助手
+- [ ] 相册
+
+暂时定的是这些，如果你有什么想法，欢迎提交issue告知我
+
+### 项目目录
+
+项目是用vue-cli4.2构建的，根目录下的一些文件就不说明了，就列下src目录下的
+
 ```
-npm install
+├─src 
+│ ├─App.vue 
+│ ├─assets 
+│ │ ├─css ------------------- // 全局样式文件夹
+│ │ │ ├─base.scss ----------- // 全局公共样式
+│ │ │ ├─index.scss ---------- // 样式文件夹出口文件
+│ │ │ ├─reset.scss ---------- // 样式重置
+│ │ │ ├─_mixins.scss -------- // scss全局mixin
+│ │ │ └─_vant-theme.less ---- // 自定义vant主题
+│ │ ├─img ------------------- // 图片文件夹
+│ │ └─js -------------------- // 放第三方JS
+│ │   └─vantCustom ---------- // 定制vant组件JS
+│ ├─components -------------- // 公共组件
+│ ├─constant ---------------- // 常量文件夹
+│ ├─icons ------------------- // svg
+│ ├─main.js 
+│ ├─plugins ----------------- // 项目插件文件夹
+│ │ ├─fetch ----------------- // 请求引入
+│ │ ├─index.js -------------- // 插件文件夹出口文件
+│ │ ├─mixins ---------------- // vue全局mixin
+│ │ ├─storage --------------- // 封装的全局本地存储方法
+│ │ └─VKeepAlive.js --------- // 封装的keep-alive组件
+│ ├─router ------------------ // 路由文件夹
+│ │ ├─configure.js ---------- // 路由配置文件
+│ │ ├─index.js -------------- // 路由出口文件
+│ │ └─router.js 
+│ ├─services ---------------- // 接口服务文件夹
+│ │ ├─index.js -------------- // 接口出口文件
+│ │ └─modules --------------- // 接口分模块存放
+│ ├─store ------------------- // store文件夹
+│ ├─utils ------------------- // 公共方法
+│ │ ├─format.js ------------- // 格式化数据的方法
+│ │ ├─utils.js -------------- // 其它公共方法
+│ │ └─validate.js ----------- // 公共校验方法
+│ └─views 
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

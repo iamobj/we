@@ -46,7 +46,6 @@
 
 <script>
 import { SwipeCell, List, Image, Button, Empty, Skeleton } from 'vant'
-import { reqNoticeList, reqNoticeUpdate } from '@/services/notice.js'
 import { NOTICE } from '@/constant'
 export default {
   name: 'newsList',
@@ -80,7 +79,7 @@ export default {
       }
       this.listLoading = true
       try {
-        const { data } = await reqNoticeList(params)
+        const { data } = await this.$api.notice.reqNoticeList(params)
         this.listFinished = data.list.length < this.pageSize
         data.list = this.pageNo === 1 ? data.list : [...this.notice.list, ...data.list]
         this.notice = data
@@ -98,7 +97,7 @@ export default {
         read: true
       }
       try {
-        await reqNoticeUpdate(params)
+        await this.$api.notice.reqNoticeUpdate(params)
       } catch (error) {
         console.log('getNoticeRead -> error', error)
       }

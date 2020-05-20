@@ -19,7 +19,6 @@
 
 <script>
 import { Field, Divider, Button } from 'vant'
-import { reqReleaseDaily } from '@/services/daily.js'
 export default {
   name: 'releaseDaily',
   data() {
@@ -38,7 +37,7 @@ export default {
         weId: this.weId,
         txt: this.txt
       }
-      reqReleaseDaily(params).then(res => {
+      this.$api.daily.reqReleaseDaily(params).then(res => {
         this.$toast('发布成功✌,启程返航')
         setTimeout(() => {
           if (history.length) {

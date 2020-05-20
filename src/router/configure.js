@@ -2,7 +2,7 @@
 import router from './router'
 import { Toast } from 'vant'
 import $store from '@/store'
-import { reqWeInfo } from '@/services/we.js'
+import { api as $api } from '@/services'
 import { storage as $storage } from '@/plugins'
 import { mergeBeforeEachHook } from '@/plugins/VKeepAlive'
 
@@ -18,7 +18,7 @@ router.beforeEach(mergeBeforeEachHook((to, from, next) => {
     } else {
       if ($storage.getL('token')) {
         // 有token就请求那we信息
-        reqWeInfo().then(res => {
+        $api.we.reqWeInfo().then(res => {
           const { data } = res
           if (data) {
             // 有we信息,把数据保存到vuex

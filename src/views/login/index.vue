@@ -30,7 +30,6 @@
 <script>
 import { Field, Button } from 'vant'
 import { isMobile } from '@/utils/validate.js'
-import { reqUserLogin } from '@/services/user.js'
 export default {
   name: 'login',
   props: {
@@ -72,7 +71,7 @@ export default {
         password: this.password
       }
       try {
-        const { data } = await reqUserLogin(params)
+        const { data } = await this.$api.user.reqUserLogin(params)
         // 登录成功
         this.$toast('登录成功')
         this.$storage.setL('token', data.token)

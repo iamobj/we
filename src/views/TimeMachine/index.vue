@@ -71,7 +71,6 @@
 
 <script>
 import { Image, Sticky, Skeleton, Empty, Divider, Tabbar, TabbarItem } from 'vant'
-import { reqDailyList, reqDailyDetail } from '@/services/daily.js'
 export default {
   name: 'timeMeachine',
   data() {
@@ -113,7 +112,7 @@ export default {
         pageSize: this.pageSize
       }
       try {
-        const { data } = await reqDailyList(params)
+        const { data } = await this.$api.daily.reqDailyList(params)
         this.loadFinish = data.list.length < this.pageSize
         data.list = this.pageNo === 1 ? data.list : [...this.dailys.list, ...data.list]
 
@@ -153,7 +152,7 @@ export default {
       const index = this.toDetailIndex
       if (index !== null) {
         this.toDetailIndex = null
-        const { data } = await reqDailyDetail(this.dailys.list[index]._id)
+        const { data } = await this.$api.daily.reqDailyDetail(this.dailys.list[index]._id)
         this.$set(this.dailys.list, index, data)
       }
     }
